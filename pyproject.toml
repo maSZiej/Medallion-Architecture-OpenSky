@@ -1,0 +1,26 @@
+[project]
+name = "spark-workers-test"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "m_szuberla", email = "maciej.szuberla@wp.pl" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "opensky-api",
+    "pandas>=3.0.5",
+    "pyarrow>=25.0.1",
+    "pyspark>=4.2.0",
+    "requests>=2.34.2",
+]
+
+[project.scripts]
+spark-workers-test = "spark_workers_test:main"
+
+[build-system]
+requires = ["uv_build>=0.12.0,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.sources]
+opensky-api = { git = "https://github.com/openskynetwork/opensky-api.git", subdirectory = "python" }
