@@ -8,11 +8,14 @@ authors = [
 ]
 requires-python = ">=3.14"
 dependencies = [
+    "boto3>=1.43.72",
+    "delta-spark>=4.1.0",
     "opensky-api",
     "pandas>=3.0.5",
     "pyarrow>=25.0.1",
-    "pyspark>=4.2.0",
+    "pyspark==4.1.2",
     "requests>=2.34.2",
+    "ruff>=0.16.3",
     "shapely>=2.1.2",
 ]
 
