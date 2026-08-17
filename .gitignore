@@ -1,0 +1,5 @@
+/src/spark_workers_test/credentials.json
+/src/spark_workers_test/db.json
+/src/spark_workers_test/__pycache__
+/src/spark_workers_test/poland.json
+.venv
