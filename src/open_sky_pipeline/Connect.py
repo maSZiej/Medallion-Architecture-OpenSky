@@ -2,10 +2,13 @@ import os
 from pyspark.sql import SparkSession
 from delta import configure_spark_with_delta_pip
 import sys
+import sys
+import os
+
 
 PACKAGES = [
-    "org.apache.hadoop:hadoop-aws:3.4.2",
-    "com.amazonaws:aws-java-sdk-bundle:1.12.720",
+    "org.apache.hadoop:hadoop-aws:3.3.4",
+    "com.amazonaws:aws-java-sdk-bundle:1.12.262",
     "org.postgresql:postgresql:42.7.3",
 ]
 minio_access_key = 'minioadmin'
@@ -14,11 +17,28 @@ minio_endpoint = 'http://127.0.0.1:9000'
 minio_bucket = "bronze"
 ##################
 
-os.environ["HADOOP_HOME"] = r"C:\hadoop"
-os.environ["PATH"] += r"C:\hadoop\bin"
+# os.environ["HADOOP_HOME"] = r"C:\hadoop"
+# os.environ["PATH"] += r"C:\hadoop\bin"
+import os
+
+HADOOP_HOME = r"C:\hadoop"
+
+os.environ["HADOOP_HOME"] = HADOOP_HOME
+os.environ["PATH"] = (
+    os.path.join(HADOOP_HOME, "bin")
+    + os.pathsep
+    + os.environ["PATH"]
+)
 os.environ["JAVA_HOME"]=r"C:\Program Files\Java\jdk-17.0.2"
 os.environ["PYSPARK_PYTHON"] = sys.executable
 os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
+
+print("Python:", sys.executable)
+print("Version:", sys.version)
+print("VIRTUAL_ENV:", os.environ.get("VIRTUAL_ENV"))
+print("SPARK_HOME:", os.environ.get("SPARK_HOME"))
+print("JAVA_HOME:", os.environ.get("JAVA_HOME"))
+
 ######################################
 def get_spark(app_name: str = "incremental_data"):
     builder = (
