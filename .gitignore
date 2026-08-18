@@ -1,6 +1,6 @@
-/src/open_sky_pipeline/credentials.json
-/src/open_sky_pipeline/db.json
-/src/open_sky_pipeline/poland.json
+/src/open_sky_pipeline/Bronze/credentials.json
+/src/open_sky_pipeline/Gold/db.json
+/src/open_sky_pipeline/Silver/poland.json
 /src/open_sky_pipeline/__pycache__
 
 .venv

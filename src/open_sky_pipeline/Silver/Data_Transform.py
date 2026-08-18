@@ -1,11 +1,41 @@
 from open_sky_pipeline.Connect import get_spark
-from pyspark.sql.functions import col,create_map, lit,pandas_udf,from_unixtime,when
+from pyspark.sql.functions import col,create_map, lit,pandas_udf,from_unixtime,when,max
+from pyspark.sql.types import FloatType, DateType, StringType,IntegerType, BooleanType
+from pyspark.sql import DataFrame
 from shapely.geometry import Point, Polygon
 import json
 import pandas as pd
 
-spark=get_spark()
+##########################
+#FUNCTIONS
+import os
 
+print("HADOOP_HOME =", os.environ.get("HADOOP_HOME"))
+print("PATH contains hadoop =", "hadoop" in os.environ.get("PATH", "").lower())
+spark=get_spark()
+import os
+import sys
+import pyspark
+
+print("Python:", sys.executable)
+print("PySpark:", pyspark.__version__)
+print("HADOOP_HOME:", os.environ.get("HADOOP_HOME"))
+print("PATH Hadoop:", [
+    x for x in os.environ["PATH"].split(os.pathsep)
+    if "hadoop" in x.lower()
+])
+
+print(
+    "Hadoop:",
+    spark.sparkContext._jvm.org.apache.hadoop.util.VersionInfo.getVersion()
+)
+print(
+    spark.sparkContext._jvm.org.apache.hadoop.util.VersionInfo.getVersion()
+)
+
+print(
+    spark.sparkContext._jvm.org.apache.hadoop.util.NativeCodeLoader.getLibraryName()
+)
 @pandas_udf("boolean")
 def check_point_in_polygon(long: pd.Series, lat: pd.Series) -> pd.Series:
     return pd.Series(
@@ -14,6 +44,15 @@ def check_point_in_polygon(long: pd.Series, lat: pd.Series) -> pd.Series:
             for lon, la in zip(long, lat)
         ]
     )
+def check_rows_count(df:DataFrame)-> int:
+    cols=df.columns
+    cols.remove("ingestion_timestamp")
+    count=df.select(cols).distinct().count()
+    return count
+#############
+# VARIABLES
+
+
 
 int_list=["time_position","last_contact","position_source","category"]
 float_list=["longitude","latitude","geo_altitude","velocity","true_track","vertical_rate","baro_altitude"]
@@ -64,3 +103,54 @@ with open("poland.json", "r") as f:
 poland_polygon = Polygon(
     Poland_Polygon["features"][0]["geometry"]["coordinates"][0]
 )
+################################################################
+# ACTIONS
+df3 = spark.read.parquet("s3a://bronze/aircraft")
+max_ingestion=df3.select(max('ingestion_timestamp')).first()[0]
+df3=df3.where(col('ingestion_timestamp')==max_ingestion)
+
+
+df=df3 \
+    .withColumns({col: df3[col].cast(FloatType()) for col in float_list}) \
+    .withColumns({col: df3[col].cast(IntegerType()) for col in int_list}) \
+    .withColumns({col: df3[col].cast(BooleanType()) for col in bool_list})
+
+count_before_enrichment=check_rows_count(df)
+
+df=df.withColumn("altitude_diff", col("geo_altitude") - col("baro_altitude"))
+df=df.withColumn("last_contact_h",from_unixtime(col("last_contact")))
+df=df.withColumn("time_position_h",from_unixtime(col("time_position")))
+df=df.withColumn(
+    "vertical_category",
+    when(col("vertical_rate") > 0, "Climbing")
+    .otherwise(when(col("vertical_rate")==0,"Constant Altitude")
+    .otherwise("Descending"))
+    )
+df = df.withColumn(
+    "aircraft_category",
+    aircraft_map.getItem(col("category"))
+)
+df = df.withColumn(
+    "position_source_name",
+    position_source_map.getItem(col("position_source"))
+)
+df = df.withColumn(
+    "isPoland",
+    check_point_in_polygon(col("longitude"), col("latitude"))
+)
+
+
+count_after_enrichment=check_rows_count(df)
+
+
+print(count_before_enrichment==count_after_enrichment)
+try:
+    df.write \
+        .format("delta") \
+        .mode("overwrite") \
+        .save("s3a://silver/aircraft")
+except Exception as e:
+    print(e)
+    
+df.show()
+print("IM HERERE")
