@@ -233,6 +233,35 @@ wheels = [
 ]
 
 [[package]]
+name = "open-sky-pipeline"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "boto3" },
+    { name = "delta-spark" },
+    { name = "opensky-api" },
+    { name = "pandas" },
+    { name = "pyarrow" },
+    { name = "pyspark" },
+    { name = "requests" },
+    { name = "ruff" },
+    { name = "shapely" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "boto3", specifier = ">=1.43.72" },
+    { name = "delta-spark", specifier = ">=4.1.0" },
+    { name = "opensky-api", git = "https://github.com/openskynetwork/opensky-api.git?subdirectory=python" },
+    { name = "pandas", specifier = ">=3.0.5" },
+    { name = "pyarrow", specifier = ">=25.0.1" },
+    { name = "pyspark", specifier = "==4.1.2" },
+    { name = "requests", specifier = ">=2.34.2" },
+    { name = "ruff", specifier = ">=0.16.3" },
+    { name = "shapely", specifier = ">=2.1.2" },
+]
+
+[[package]]
 name = "opensky-api"
 version = "1.4.0"
 source = { git = "https://github.com/openskynetwork/opensky-api.git?subdirectory=python#16e3803d2495d0029bebc3c85b2a235eeb122742" }
@@ -407,35 +436,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/94/e7/b2c673351809dca68a0e064b6af791aa332cf192da575fd474ed7d6f16a2/six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81", size = 34031, upload-time = "2024-12-04T17:35:28.174Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274", size = 11050, upload-time = "2024-12-04T17:35:26.475Z" },
-]
-
-[[package]]
-name = "spark-workers-test"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "boto3" },
-    { name = "delta-spark" },
-    { name = "opensky-api" },
-    { name = "pandas" },
-    { name = "pyarrow" },
-    { name = "pyspark" },
-    { name = "requests" },
-    { name = "ruff" },
-    { name = "shapely" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "boto3", specifier = ">=1.43.72" },
-    { name = "delta-spark", specifier = ">=4.1.0" },
-    { name = "opensky-api", git = "https://github.com/openskynetwork/opensky-api.git?subdirectory=python" },
-    { name = "pandas", specifier = ">=3.0.5" },
-    { name = "pyarrow", specifier = ">=25.0.1" },
-    { name = "pyspark", specifier = "==4.1.2" },
-    { name = "requests", specifier = ">=2.34.2" },
-    { name = "ruff", specifier = ">=0.16.3" },
-    { name = "shapely", specifier = ">=2.1.2" },
 ]
 
 [[package]]

@@ -1,5 +1,10 @@
-/src/Medallion-Architecture-OpenSky/credentials.json
-/src/Medallion-Architecture-OpenSky/db.json
-/src/Medallion-Architecture-OpenSky/__pycache__
-/src/Medallion-Architecture-OpenSky/poland.json
+/src/open_sky_pipeline/credentials.json
+/src/open_sky_pipeline/db.json
+/src/open_sky_pipeline/poland.json
+/src/open_sky_pipeline/__pycache__
+
 .venv
+
+/Notebooks/credentials.json
+/Notebooks/db.json
+/Notebooks/poland.json
