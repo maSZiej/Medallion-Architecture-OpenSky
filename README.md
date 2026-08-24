@@ -1,5 +1,5 @@
 # open sky pipeline
-
+Project have on purpose to show aircraft traffic on Polish sky
 Project uses medallion architecture with 3 layers bronze, silver, gold
 
 ### Bronze layer:
