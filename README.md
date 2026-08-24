@@ -1,5 +1,5 @@
 # open sky pipeline
-
+Project have on purpose to show aircraft traffic on Polish sky
 Project uses medallion architecture with 3 layers bronze, silver, gold
 
 ### Bronze layer:
@@ -28,15 +28,15 @@ Here is visualalization of data flow:
 ![alt text](Images\Data_Flow.jpg)
 
 ### Technologies
-| Technology | used For| Column 3 |
-|----------|----------|----------|
-| UV | libraries depedency| Row 1 C3 |
-| Pyspark | disitribiuted processing| Row 2 C3 |
-| Minio | data lake - S3 bucket on prem | Row 2 C3 |
-| Delta-spark | transaction and data time travel| Row 2 C3 |
-| Kedro | bulding effective pipeline| Row 2 C3 |
-| Docker| contenerization services | Row 2 C3 |
-| Github | version control| Row 2 C3 |
+| Technology | used For|
+|----------|----------|
+| UV | libraries depedency| 
+| Pyspark | disitribiuted processing|
+| Minio | data lake - S3 bucket on prem | 
+| Delta-spark | transaction and data time travel| 
+| Kedro | bulding effective pipeline| 
+| Docker| contenerization services | 
+| Github | version control| 
 <!-- | Row 2 C1 | Row 2 C2 | Row 2 C3 |
 | Row 2 C1 | Row 2 C2 | Row 2 C3 |
 | Row 2 C1 | Row 2 C2 | Row 2 C3 | -->

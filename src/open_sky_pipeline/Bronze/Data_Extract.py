@@ -65,6 +65,6 @@ try:
     aircraft_spark_df.write \
         .format("delta") \
         .mode("append") \
-        .save(f"s3a://bronze/{target_table}")
+        .save(f"s3a://meddalion/bronze/{target_table}")
 except Exception as e:
     print(e)
