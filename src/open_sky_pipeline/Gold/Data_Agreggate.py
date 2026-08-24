@@ -1,9 +1,33 @@
 from open_sky_pipeline.Connect import get_spark
 from pyspark.sql.functions import col,avg,count
+import json
+from pyspark.sql import DataFrame
+from delta.tables import DeltaTable
+
+    
+def write_to_gold(gold_df:DataFrame,gold_path:str):
+    if not DeltaTable.isDeltaTable(spark, gold_path):
+        # pierwszy load
+        gold_df.write \
+            .format("delta") \
+            .mode("overwrite") \
+            .save(gold_path)
+    else:
+        # kolejne loady
+        gold = DeltaTable.forPath(spark, gold_path)
+
+        gold.alias("target") \
+            .merge(
+                gold_df.alias("source"),
+                "target.icao24 = source.icao24" and 'target.ingestion_timestamp = source.ingestion_timestamp',
+                
+            ) \
+            .whenNotMatchedInsertAll() \
+            .execute()
 
 spark=get_spark()
-df=spark.read.format('delta').load("s3a://silver/aircraft").where((col('isPoland')==True) & (col('position_source_name')=='ADS-B'))
-df_hist=spark.read.format('delta').load("s3a://silver/aircraft_hist").where((col('isPoland')==True) & (col('position_source_name')=='ADS-B'))
+df=spark.read.format('delta').load("s3a://meddalion/silver/aircraft").where((col('isPoland')==True) & (col('position_source_name')=='ADS-B'))
+df_hist=spark.read.format('delta').load("s3a://meddalion/silver/aircraft_hist").where((col('isPoland')==True) & (col('position_source_name')=='ADS-B'))
 
 df_fact=df.select('callsign','last_contact_h','time_position_h','longitude','latitude','geo_altitude','baro_altitude','altitude_diff','true_track','velocity','vertical_category','on_ground','squawk', 'spi')
 df_aircraft_dim=df.select('icao24','origin_country','aircraft_category')
@@ -20,7 +44,7 @@ df_velocity=df_hist.where(col('on_ground')==False).groupBy(col('ingestion_timest
 df_all=df_all.alias('da')\
 .join(df_ground.alias('dg'),on=["ingestion_timestamp"],how="left")\
 .join(df_velocity.alias('dv'),on=["ingestion_timestamp"],how="left")\
-.select('ingestion_timestamp','all_observation_count','count_flying','on_ground_count','dv.avg_velocity','dv.avg_baro_alt').show()
+.select('ingestion_timestamp','all_observation_count','count_flying','on_ground_count','dv.avg_velocity','dv.avg_baro_alt')
 ##################
 df_cat=df_hist.where(col('on_ground')==False)\
 .groupBy(col('ingestion_timestamp'),col('vertical_category'))\
@@ -30,3 +54,12 @@ df_cat=df_hist.where(col('on_ground')==False)\
     count('*').alias('flying_count')
     )\
 .orderBy([col('ingestion_timestamp'),col('vertical_category')],ascending=False)
+
+
+    
+#################
+
+df_fact.write.mode('overwrite').format('delta').save("s3a://meddalion/gold/fact_table")
+write_to_gold(df_aircraft_dim,"s3a://meddalion/gold/dim_table")
+write_to_gold(df_all,"s3a://meddalion/gold/KPI_for_timestamps")
+write_to_gold(df_cat,"s3a://meddalion/gold/KPI_for_cat&ts")

@@ -36,7 +36,7 @@ import pandas as pd
 # print(
 #     spark.sparkContext._jvm.org.apache.hadoop.util.NativeCodeLoader.getLibraryName()
 # )
-
+spark=get_spark()
 @pandas_udf("boolean")
 def check_point_in_polygon(long: pd.Series, lat: pd.Series) -> pd.Series:
     return pd.Series(
@@ -106,8 +106,8 @@ poland_polygon = Polygon(
 )
 ################################################################
 # ACTIONS
-spark=get_spark()
-df3 = spark.read.parquet("s3a://bronze/aircraft")
+
+df3 = spark.read.parquet("s3a://meddalion/bronze/aircraft")
 max_ingestion=df3.select(max('ingestion_timestamp')).first()[0]
 df3=df3.where(col('ingestion_timestamp')==max_ingestion)
 
@@ -162,7 +162,7 @@ try:
     df.write \
         .format("delta") \
         .mode("overwrite") \
-        .save("s3a://silver/aircraft")
+        .save("s3a://meddalion/silver/aircraft")
 except Exception as e:
     print(e)
     
