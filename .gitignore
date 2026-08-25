@@ -159,3 +159,15 @@ venv.bak/
 
 # mlflow local runs
 mlruns/*
+
+
+/src/open_sky_pipeline/pipelines/Bronze/credentials.json
+/src/open_sky_pipeline/pipelines/Gold/db.json
+/src/open_sky_pipeline/pipelines/Silver/poland.json
+/src/open_sky_pipeline/__pycache__
+
+.venv
+
+/Notebooks/credentials.json
+/Notebooks/db.json
+/Notebooks/poland.json
