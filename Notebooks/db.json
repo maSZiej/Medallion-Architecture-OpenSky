@@ -1,7 +1,0 @@
-
-
-{
-    "user": "postgres",
-    "password": "admin",
-    "driver": "org.postgresql.Driver"
-}
