@@ -1,55 +1,51 @@
-
-
-bronze: # Dataset name
-  type: spark.DeltaTableDataset # Dataset type
+bronze: 
+  type: spark.DeltaTableDataset 
   filepath: s3a://meddalion/bronze/aircraft
 
-# s3a://meddalion/bronze/{target_table}
-
-silver: # Dataset name
-  type: spark.DeltaTableDataset # Dataset type
+silver:
+  type: spark.DeltaTableDataset 
   filepath: s3a://meddalion/silver/aircraft
 
-silver_hist: # Dataset name
-  type: spark.DeltaTableDataset # Dataset type
+silver_hist: 
+  type: spark.DeltaTableDataset
   filepath: s3a://meddalion/silver/aircraft_hist
 
-gold_dim_table_s3: # Dataset name
-  type: spark.DeltaTableDataset # Dataset type
+gold_dim_table_s3: 
+  type: spark.DeltaTableDataset 
   filepath: s3a://meddalion/gold/dim_table
 
-gold_fact_table_s3: # Dataset name
-  type: spark.DeltaTableDataset # Dataset type
+gold_fact_table_s3:
+  type: spark.DeltaTableDataset 
   filepath: s3a://meddalion/gold/fact_table
 
-gold_kpi_cat_ts_s3: # Dataset name
-  type: spark.DeltaTableDataset # Dataset type
+gold_kpi_cat_ts_s3: 
+  type: spark.DeltaTableDataset
   filepath: s3a://meddalion/gold/KPI_for_cat&ts
 
-gold_kpi_ts_s3: # Dataset name
-  type: spark.DeltaTableDataset # Dataset type
+gold_kpi_ts_s3: 
+  type: spark.DeltaTableDataset
   filepath: s3a://meddalion/gold/KPI_for_ts
 
-gold_dim_table_pg: # Dataset name
-  type: spark.SparkJDBCDataset # Dataset type
+gold_dim_table_pg: 
+  type: spark.SparkJDBCDataset 
   table_name: "dim_table"
   schema: "public"
   credentials: postgres
 
-gold_fact_table_pg: # Dataset name
-  type: spark.SparkJDBCDataset # Dataset type
+gold_fact_table_pg: 
+  type: spark.SparkJDBCDataset 
   table_name: "fact_table"
   schema: "public"
   credentials: postgres
 
-gold_kpi_cat_ts_pg: # Dataset name
-  type: spark.SparkJDBCDataset # Dataset type
+gold_kpi_cat_ts_pg: 
+  type: spark.SparkJDBCDataset 
   table_name: "kpi_cat_ts"
   schema: "public"
   credentials: postgres
 
-gold_kpi_ts_pg: # Dataset name
-  type: spark.SparkJDBCDataset # Dataset type
+gold_kpi_ts_pg: 
+  type: spark.SparkJDBCDataset 
   table_name: "kpi_ts"
   schema: "public"
   credentials: postgres

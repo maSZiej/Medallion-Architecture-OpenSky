@@ -19,12 +19,12 @@
 #
 import re
 
-from new_kedro_project import __version__ as release
+from open_sky_pipeline import __version__ as release
 
 # -- Project information -----------------------------------------------------
 
-project = "new_kedro_project"
-author = "Kedro"
+project = "open_sky_pipeline"
+author = "Maciej"
 
 # The short X.Y version.
 version = re.match(r"^([0-9]+\.[0-9]+).*", release).group(1)
@@ -119,7 +119,7 @@ html_show_copyright = False
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "new_kedro_projectdoc"
+htmlhelp_basename = "open_sky_pipelinedoc"
 
 # -- Options for LaTeX output ------------------------------------------------
 
@@ -147,8 +147,8 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "new_kedro_project.tex",
-        "new_kedro_project Documentation",
+        "open_sky_pipeline.tex",
+        "open_sky_pipeline Documentation",
         "Kedro",
         "manual",
     )
@@ -161,8 +161,8 @@ latex_documents = [
 man_pages = [
     (
         master_doc,
-        "new_kedro_project",
-        "new_kedro_project Documentation",
+        "open_sky_pipeline",
+        "open_sky_pipeline Documentation",
         [author],
         1,
     )
@@ -176,12 +176,12 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc,
-        "new_kedro_project",
-        "new_kedro_project Documentation",
+        "open_sky_pipeline",
+        "open_sky_pipeline Documentation",
         author,
-        "new_kedro_project",
-        "Project new_kedro_project codebase.",
-        "Data-Science",
+        "open_sky_pipeline",
+        "Project open_sky_pipeline codebase.",
+        "Data-Engineering",
     )
 ]
 
