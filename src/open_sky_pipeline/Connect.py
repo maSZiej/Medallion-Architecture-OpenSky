@@ -11,15 +11,9 @@ PACKAGES = [
     "com.amazonaws:aws-java-sdk-bundle:1.12.262",
     "org.postgresql:postgresql:42.7.3",
 ]
-minio_access_key = 'minioadmin'
-minio_secret_key = 'minioadmin'
-minio_endpoint = 'http://127.0.0.1:9000'
-minio_bucket = "bronze"
-##################
-
-# os.environ["HADOOP_HOME"] = r"C:\hadoop"
-# os.environ["PATH"] += r"C:\hadoop\bin"
-import os
+# minio_access_key = 'minioadmin'
+# minio_secret_key = 'minioadmin'
+# minio_endpoint = 'http://127.0.0.1:9000'
 
 HADOOP_HOME = r"C:\hadoop"
 
@@ -33,11 +27,11 @@ os.environ["JAVA_HOME"]=r"C:\Program Files\Java\jdk-17.0.2"
 os.environ["PYSPARK_PYTHON"] = sys.executable
 os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
 
-print("Python:", sys.executable)
-print("Version:", sys.version)
-print("VIRTUAL_ENV:", os.environ.get("VIRTUAL_ENV"))
-print("SPARK_HOME:", os.environ.get("SPARK_HOME"))
-print("JAVA_HOME:", os.environ.get("JAVA_HOME"))
+# print("Python:", sys.executable)
+# print("Version:", sys.version)
+# print("VIRTUAL_ENV:", os.environ.get("VIRTUAL_ENV"))
+# print("SPARK_HOME:", os.environ.get("SPARK_HOME"))
+# print("JAVA_HOME:", os.environ.get("JAVA_HOME"))
 
 ######################################
 def get_spark(app_name: str = "incremental_data"):
