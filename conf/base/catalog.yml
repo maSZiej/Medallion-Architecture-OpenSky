@@ -1,6 +1,8 @@
 bronze: 
   type: spark.DeltaTableDataset 
   filepath: s3a://meddalion/bronze/aircraft
+  save_args:
+    mode: append
 
 silver:
   type: spark.DeltaTableDataset 
@@ -49,3 +51,7 @@ gold_kpi_ts_pg:
   table_name: "kpi_ts"
   schema: "public"
   credentials: postgres
+
+Poland_polygon:
+  type: json.JSONDataset
+  filepath: open_sky_pipeline/data/poland.json

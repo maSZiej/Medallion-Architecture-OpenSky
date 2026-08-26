@@ -5,7 +5,6 @@ from pyspark.sql.functions import current_timestamp
 
 aircraft_df=[]
 lista={}
-jdbc_url = "jdbc:postgresql://localhost:5432/OpenSky"
 target_table = 'aircraft'
 schema = StructType([
 StructField("icao24", StringType(), True),
