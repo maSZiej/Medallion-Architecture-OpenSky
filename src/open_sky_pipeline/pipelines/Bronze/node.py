@@ -30,8 +30,8 @@ def read_data_from_api()->DataFrame:
     ])
 
     
-
-    with OpenSkyApi(token_manager=TokenManager.from_json_file("credentials.json")) as api:
+    credentials = conf_loader["opensky_api"]
+    with OpenSkyApi(token_manager=TokenManager.from_json_file(credentials)) as api:
         states = api.get_states()
 
     for state in states.states:

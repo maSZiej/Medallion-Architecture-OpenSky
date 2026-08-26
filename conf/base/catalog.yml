@@ -1,6 +1,7 @@
-bronze: 
-  type: spark.DeltaTableDataset 
+bronze:
+  type: spark.SparkDatasetV2
   filepath: s3a://meddalion/bronze/aircraft
+  file_format: delta
   save_args:
     mode: append
 

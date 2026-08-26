@@ -8,10 +8,11 @@ authors = [
 ]
 requires-python = ">=3.11,<3.12"
 dependencies = [
-    "boto3>=1.43.72",
+    "boto3>=1.28.0",
     "delta-spark==3.3.2",
     "kedro>=1.5.0",
     "kedro-airflow>=0.11.0",
+    "kedro-datasets[spark]>=9.6.0",
     "kedro-viz>=12.4.0",
     "opensky-api",
     "pandas>=3.0.5",
@@ -96,3 +97,5 @@ select = [
     "T201", # Print Statement
 ]
 ignore = ["E501"]  # Ruff format takes care of line-too-long
+[tool.kedro_telemetry]
+project_id = "a14639b9585e46469a76e82b694d91fc"
