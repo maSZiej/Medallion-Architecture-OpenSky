@@ -6,36 +6,7 @@ from shapely.geometry import Point, Polygon
 import json
 import pandas as pd
 
-##########################
-# #FUNCTIONS
-# import os
 
-# print("HADOOP_HOME =", os.environ.get("HADOOP_HOME"))
-# print("PATH contains hadoop =", "hadoop" in os.environ.get("PATH", "").lower())
-
-# import os
-# import sys
-# import pyspark
-
-# print("Python:", sys.executable)
-# print("PySpark:", pyspark.__version__)
-# print("HADOOP_HOME:", os.environ.get("HADOOP_HOME"))
-# print("PATH Hadoop:", [
-#     x for x in os.environ["PATH"].split(os.pathsep)
-#     if "hadoop" in x.lower()
-# ])
-
-# print(
-#     "Hadoop:",
-#     spark.sparkContext._jvm.org.apache.hadoop.util.VersionInfo.getVersion()
-# )
-# print(
-#     spark.sparkContext._jvm.org.apache.hadoop.util.VersionInfo.getVersion()
-# )
-
-# print(
-#     spark.sparkContext._jvm.org.apache.hadoop.util.NativeCodeLoader.getLibraryName()
-# )
 spark=get_spark()
 @pandas_udf("boolean")
 def check_point_in_polygon(long: pd.Series, lat: pd.Series) -> pd.Series:

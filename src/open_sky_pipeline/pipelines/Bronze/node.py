@@ -2,10 +2,11 @@ from open_sky_pipeline.Connect import get_spark
 from opensky_api import OpenSkyApi, TokenManager
 from pyspark.sql.types import StructType, StructField, StringType, MapType
 from pyspark.sql.functions import current_timestamp
-from pyspark.sql import DataFrame
+from pyspark.sql import DataFrame,SparkSession
 
 
 def read_data_from_api()->DataFrame:
+    spark = SparkSession.builder.getOrCreate()
     aircraft_df=[]
     schema = StructType([
     StructField("icao24", StringType(), True),
@@ -28,7 +29,7 @@ def read_data_from_api()->DataFrame:
     StructField("category",  StringType(), True)
     ])
 
-    spark=get_spark()
+    
 
     with OpenSkyApi(token_manager=TokenManager.from_json_file("credentials.json")) as api:
         states = api.get_states()

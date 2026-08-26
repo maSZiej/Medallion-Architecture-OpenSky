@@ -1,11 +1,11 @@
 from open_sky_pipeline.Connect import get_spark
 from pyspark.sql.functions import col,avg,count
 import json
-from pyspark.sql import DataFrame
+from pyspark.sql import DataFrame,SparkSession
 from delta.tables import DeltaTable
 
 def gold_layer():
-    spark=get_spark()
+    spark = SparkSession.builder.getOrCreate()
     def _write_to_gold(gold_df:DataFrame,gold_path:str):
         if not DeltaTable.isDeltaTable(spark, gold_path):
             # pierwszy load
