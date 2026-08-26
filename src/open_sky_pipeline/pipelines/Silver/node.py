@@ -5,8 +5,14 @@ from pyspark.sql import DataFrame,SparkSession
 from shapely.geometry import Point, Polygon
 import json
 import pandas as pd
+from kedro.io import DataCatalog
+from pathlib import Path
+from kedro.framework.session import KedroSession
+from kedro.framework.startup import bootstrap_project
 
-def silver_node(json_poland:json):
+# Inicjalizacja kontekstu projektu Kedro
+
+def silver_node(*args, **kwargs):
     spark = SparkSession.builder.getOrCreate()
     
     @pandas_udf("boolean")
@@ -24,7 +30,16 @@ def silver_node(json_poland:json):
         return count
     #############
     # VARIABLES
-    Poland_Polygon=json_poland
+    PROJECT_DIR = Path(__file__).resolve().parents[4]
+    bootstrap_project(PROJECT_DIR)
+
+    with KedroSession.create(PROJECT_DIR) as session:
+        context = session.load_context()
+        catalog = context.catalog
+        
+        # Wczytanie samych DANYCH z katalogu
+        Poland_Polygon = catalog.load("Poland_polygon")
+        
 
 
     int_list=["time_position","last_contact","position_source","category"]
@@ -130,20 +145,22 @@ def silver_node(json_poland:json):
 
 
     print(count_before_enrichment==count_after_enrichment)
-    return df
-    # try:
-    #     df.write \
-    #         .format("delta") \
-    #         .mode("overwrite") \
-    #         .save("s3a://meddalion/silver/aircraft")
-    # except Exception as e:
-    #     print(e)
+    try:
+        df.write \
+            .format("delta") \
+            .mode("overwrite") \
+            .save("s3a://meddalion/silver/aircraft")
+    except Exception as e:
+        print(e)
+    return True
+
         
     # df.show()
-def silver_node_hist():
+def silver_node_hist(*args, **kwargs):
     spark = SparkSession.builder.getOrCreate()
-    df3_hist = spark.read.parquet("s3a://meddalion/bronze/aircraft")
+    df3_hist = spark.read.parquet("s3a://meddalion/silver/aircraft")
     df3_hist.write \
         .format("delta") \
         .mode("append") \
         .save("s3a://meddalion/silver/aircraft_hist")
+    return True

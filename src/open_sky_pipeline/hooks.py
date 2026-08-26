@@ -46,7 +46,9 @@ class SparkHooks:
             .config("spark.databricks.delta.schema.autoMerge.enabled", "true")
             # ---- Performance ----
             .config("spark.sql.execution.arrow.pyspark.enabled", "true")
-            .config("spark.hadoop.fs.s3a.fast.upload", "true")
+            .config("spark.hadoop.fs.s3a.fast.upload", "true")\
+            ### ---- Driver ----
+            .config("spark.driver.extraJavaOptions", "-Djava.io.tmpdir=C:/tmp/spark") \
         )
 
         spark = configure_spark_with_delta_pip(

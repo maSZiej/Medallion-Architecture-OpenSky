@@ -4,8 +4,8 @@ def create_pipeline(**kwargs) -> Pipeline:
     return Pipeline([
                         node(
             func=gold_layer,
-            inputs=[],
+            inputs='silver_ret',
             # inputs=["silver","silver_hist"],       # pobiera z catalog.yml
-            outputs="silver_aircraft",   # KEDRO AUTOMATYCZNIE ZAPISUJE DO S3/MinIO
+            outputs="gold_ret",   # KEDRO AUTOMATYCZNIE ZAPISUJE DO S3/MinIO
             name="gold_aircraft_node"
         )])

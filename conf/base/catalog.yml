@@ -55,4 +55,4 @@ gold_kpi_ts_pg:
 
 Poland_polygon:
   type: json.JSONDataset
-  filepath: open_sky_pipeline/data/poland.json
+  filepath: data/poland.json

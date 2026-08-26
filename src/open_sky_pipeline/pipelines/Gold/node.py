@@ -3,8 +3,11 @@ from pyspark.sql.functions import col,avg,count
 import json
 from pyspark.sql import DataFrame,SparkSession
 from delta.tables import DeltaTable
+from kedro.config import OmegaConfigLoader
+from kedro.framework.project import settings
+from pathlib import Path
 
-def gold_layer():
+def gold_layer(*args, **kwargs):
     spark = SparkSession.builder.getOrCreate()
     def _write_to_gold(gold_df:DataFrame,gold_path:str):
         if not DeltaTable.isDeltaTable(spark, gold_path):
@@ -20,19 +23,23 @@ def gold_layer():
             gold.alias("target") \
                 .merge(
                     gold_df.alias("source"),
-                    "target.icao24 = source.icao24" and 'target.ingestion_timestamp = source.ingestion_timestamp',
+                    'target.ingestion_timestamp = source.ingestion_timestamp',
                     
                 ) \
                 .whenNotMatchedInsertAll() \
                 .execute()
     def _write_to_db(df: DataFrame,target_table:str):
+        project_root = Path(__file__).resolve().parents[4]
+        conf_path = str(project_root / settings.CONF_SOURCE)
+        conf_loader = OmegaConfigLoader(conf_source=conf_path)
+
+        credentials = conf_loader["credentials"]
+        credentials = credentials['postgres']
         jdbc_url = "jdbc:postgresql://localhost:5432/OpenSky"
-        with open("db.json", "r") as f:
-            connection_properties = json.load(f)
 
         df.write \
         .mode("overwrite") \
-        .jdbc(url=jdbc_url, table=target_table, properties=connection_properties)
+        .jdbc(url=jdbc_url, table=target_table, properties=credentials)
     # 
     df=spark.read.format('delta').load("s3a://meddalion/silver/aircraft").where((col('isPoland')==True) & (col('position_source_name')=='ADS-B'))
     df_hist=spark.read.format('delta').load("s3a://meddalion/silver/aircraft_hist").where((col('isPoland')==True) & (col('position_source_name')=='ADS-B'))
@@ -68,7 +75,16 @@ def gold_layer():
     #################
 
     df_fact.write.mode('overwrite').format('delta').save("s3a://meddalion/gold/fact_table")
-    _write_to_gold(df_aircraft_dim,"s3a://meddalion/gold/dim_table")
+    target_table = DeltaTable.forPath(spark, "s3a://meddalion/gold/dim_table")
+    target_table.alias("target") \
+    .merge(
+        df_aircraft_dim.alias("source"),
+        "target.icao24 = source.icao24" #and 'target.ingestion_timestamp = source.ingestion_timestamp',
+        
+    ) \
+    .whenNotMatchedInsertAll() \
+    .execute()
+    # _write_to_gold(df_aircraft_dim,"s3a://meddalion/gold/dim_table")
     _write_to_gold(df_all,"s3a://meddalion/gold/KPI_for_timestamps")
     _write_to_gold(df_cat,"s3a://meddalion/gold/KPI_for_cat&ts")
     
@@ -76,3 +92,4 @@ def gold_layer():
     _write_to_db(df_aircraft_dim,'dim_table')
     _write_to_db(df_all,'kpi_ts')
     _write_to_db(df_cat,'kpi_cat_ts')
+    return True
