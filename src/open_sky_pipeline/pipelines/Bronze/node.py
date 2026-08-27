@@ -71,4 +71,4 @@ def read_data_from_api()->DataFrame:
     aircraft_spark_df = spark.createDataFrame(aircraft_df, schema=schema)
 
     aircraft_spark_df = aircraft_spark_df.withColumn("ingestion_timestamp", current_timestamp())
-    return True
+    return aircraft_spark_df

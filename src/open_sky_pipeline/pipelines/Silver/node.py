@@ -12,7 +12,7 @@ from kedro.framework.startup import bootstrap_project
 
 # Inicjalizacja kontekstu projektu Kedro
 
-def silver_node(*args, **kwargs):
+def silver_node(Bronze_Layer,Silver_hist):
     spark = SparkSession.builder.getOrCreate()
     
     @pandas_udf("boolean")
@@ -94,7 +94,8 @@ def silver_node(*args, **kwargs):
     ################################################################
     # ACTIONS
 
-    df3 = spark.read.parquet("s3a://meddalion/bronze/aircraft")
+    # df3 = spark.read.format("delta").load("s3a://meddalion/bronze/aircraft")
+    df3=Bronze_Layer
     max_ingestion=df3.select(max('ingestion_timestamp')).first()[0]
     df3=df3.where(col('ingestion_timestamp')==max_ingestion)
 
@@ -145,22 +146,23 @@ def silver_node(*args, **kwargs):
 
 
     print(count_before_enrichment==count_after_enrichment)
-    try:
-        df.write \
-            .format("delta") \
-            .mode("overwrite") \
-            .save("s3a://meddalion/silver/aircraft")
-    except Exception as e:
-        print(e)
-    return True
+    # try:
+    #     df.write \
+    #         .format("delta") \
+    #         .mode("overwrite") \
+    #         .save("s3a://meddalion/silver/aircraft")
+    # except Exception as e:
+    #     print(e)
+    return df
 
         
     # df.show()
 def silver_node_hist(*args, **kwargs):
     spark = SparkSession.builder.getOrCreate()
-    df3_hist = spark.read.parquet("s3a://meddalion/silver/aircraft")
+    df3_hist = spark.read.format("delta").load("s3a://meddalion/silver/aircraft")
     df3_hist.write \
         .format("delta") \
         .mode("append") \
         .save("s3a://meddalion/silver/aircraft_hist")
-    return True
+    print('Hi')
+    return df3_hist

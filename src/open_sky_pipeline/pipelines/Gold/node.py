@@ -70,7 +70,7 @@ def gold_layer(*args, **kwargs):
         )\
     .orderBy([col('ingestion_timestamp'),col('vertical_category')],ascending=False)
 
-
+    df_all.show()
         
     #################
 

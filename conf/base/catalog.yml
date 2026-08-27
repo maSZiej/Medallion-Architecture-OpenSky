@@ -1,4 +1,4 @@
-bronze:
+bronze_layer:
   type: spark.SparkDatasetV2
   filepath: s3a://meddalion/bronze/aircraft
   file_format: delta
@@ -6,12 +6,18 @@ bronze:
     mode: append
 
 silver:
-  type: spark.DeltaTableDataset 
+  type: spark.SparkDatasetV2
   filepath: s3a://meddalion/silver/aircraft
+  file_format: delta
+  save_args:
+    mode: overwrite
 
 silver_hist: 
-  type: spark.DeltaTableDataset
+  type: spark.SparkDatasetV2
   filepath: s3a://meddalion/silver/aircraft_hist
+  file_format: delta
+  save_args:
+    mode: append
 
 gold_dim_table_s3: 
   type: spark.DeltaTableDataset 
@@ -31,26 +37,22 @@ gold_kpi_ts_s3:
 
 gold_dim_table_pg: 
   type: spark.SparkJDBCDataset 
-  table_name: "dim_table"
-  schema: "public"
+  table: "dim_table"
   credentials: postgres
 
 gold_fact_table_pg: 
   type: spark.SparkJDBCDataset 
-  table_name: "fact_table"
-  schema: "public"
+  table: "fact_table"
   credentials: postgres
 
 gold_kpi_cat_ts_pg: 
   type: spark.SparkJDBCDataset 
-  table_name: "kpi_cat_ts"
-  schema: "public"
+  table: "kpi_cat_ts"
   credentials: postgres
 
 gold_kpi_ts_pg: 
   type: spark.SparkJDBCDataset 
-  table_name: "kpi_ts"
-  schema: "public"
+  table: "kpi_ts"
   credentials: postgres
 
 Poland_polygon:
