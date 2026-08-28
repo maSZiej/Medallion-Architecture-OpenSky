@@ -13,6 +13,7 @@ dependencies = [
     "kedro>=1.5.0",
     "kedro-airflow>=0.11.0",
     "kedro-datasets[spark]>=9.6.0",
+    "kedro-docker>=0.6.2",
     "kedro-viz>=12.4.0",
     "opensky-api",
     "pandas>=3.0.5",

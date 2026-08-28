@@ -3,7 +3,7 @@ import sys
 from pyspark.sql import SparkSession
 from delta import configure_spark_with_delta_pip
 from kedro.framework.hooks import hook_impl
-
+from pathlib import Path
 class SparkHooks:
     @hook_impl
     def after_context_created(self, context) -> None:
@@ -16,11 +16,13 @@ class SparkHooks:
         ]
         
         # Warto upewnić się, że ścieżka do winutils.exe istnieje pod C:\hadoop\bin\winutils.exe
-        HADOOP_HOME = r"C:\hadoop"
-
+        # HADOOP_HOME = r"C:\hadoop"
+        
+        project_root = Path(__file__).resolve().parents[2]
+        HADOOP_HOME = f"{project_root}/jars/hadoop"
         os.environ["HADOOP_HOME"] = HADOOP_HOME
         os.environ["PATH"] = os.path.join(HADOOP_HOME, "bin") + os.pathsep + os.environ.get("PATH", "")
-        os.environ["JAVA_HOME"] = r"C:\Program Files\Java\jdk-17.0.2"
+        # os.environ["JAVA_HOME"] = r"C:\Program Files\Java\jdk-17.0.2"
         os.environ["PYSPARK_PYTHON"] = sys.executable
         os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
 

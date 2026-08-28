@@ -2,8 +2,7 @@ import os
 from pyspark.sql import SparkSession
 from delta import configure_spark_with_delta_pip
 import sys
-import sys
-import os
+from pathlib import Path
 
 
 PACKAGES = [
@@ -14,8 +13,9 @@ PACKAGES = [
 # minio_access_key = 'minioadmin'
 # minio_secret_key = 'minioadmin'
 # minio_endpoint = 'http://127.0.0.1:9000'
-
-HADOOP_HOME = r"C:\hadoop"
+project_root = Path(__file__).resolve().parents[2]
+# print(project_root)
+HADOOP_HOME = f"{project_root}/jars/hadoop"
 
 os.environ["HADOOP_HOME"] = HADOOP_HOME
 os.environ["PATH"] = (
@@ -23,7 +23,7 @@ os.environ["PATH"] = (
     + os.pathsep
     + os.environ["PATH"]
 )
-os.environ["JAVA_HOME"]=r"C:\Program Files\Java\jdk-17.0.2"
+os.environ["JAVA_HOME"]=f"{project_root}/jars/jdk-17.0.2"
 os.environ["PYSPARK_PYTHON"] = sys.executable
 os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
 
