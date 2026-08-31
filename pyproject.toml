@@ -8,9 +8,13 @@ authors = [
 ]
 requires-python = ">=3.11,<3.12"
 dependencies = [
-    "boto3>=1.43.72",
+    "boto3>=1.28.0",
     "delta-spark==3.3.2",
     "kedro>=1.5.0",
+    "kedro-airflow>=0.11.0",
+    "kedro-datasets[spark]>=9.6.0",
+    "kedro-docker>=0.6.2",
+    "kedro-viz>=12.4.0",
     "opensky-api",
     "pandas>=3.0.5",
     "pyarrow>=25.0.1",
@@ -21,6 +25,32 @@ dependencies = [
     "shapely>=2.1.2",
 ]
 
+[project.optional-dependencies]
+docs = [
+    "docutils<0.21",
+    "sphinx>=5.3,<7.3",
+    "sphinx_rtd_theme==2.0.0",
+    "nbsphinx==0.8.1",
+    "sphinx-autodoc-typehints==1.20.2",
+    "sphinx_copybutton==0.5.2",
+    "ipykernel>=5.3, <7.0",
+    "Jinja2<3.2.0",
+    "myst-parser>=1.0,<2.1"
+]
+dev = [
+    "pytest-cov>=3,<7",
+    "pytest-mock>=1.7.1, <2.0",
+    "pytest~=9.1.1",
+    "ruff~=0.16.3"
+]
+
+[tool.setuptools.dynamic]
+version = {attr = "new_kedro_project.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = false
+
 [project.scripts]
 open_sky_pipeline= "open_sky_pipeline:main"
 
@@ -30,3 +60,43 @@ build-backend = "uv_build"
 
 [tool.uv.sources]
 opensky-api = { git = "https://github.com/openskynetwork/opensky-api.git", subdirectory = "python" }
+
+
+[tool.kedro]
+package_name = "open_sky_pipeline"
+project_name = "open_sky_pipeline"
+kedro_init_version = "1.5.0"
+tools = "['Linting', 'Testing', 'Custom Logging', 'Documentation', 'PySpark']"
+example_pipeline = "False"
+source_dir = "src"
+
+[tool.pytest.ini_options]
+addopts = """
+--cov-report term-missing \
+--cov src/new_kedro_project -ra"""
+
+[tool.coverage.report]
+fail_under = 0
+show_missing = true
+exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff]
+line-length = 88
+show-fixes = true
+
+[tool.ruff.lint]
+select = [
+    "F",   # Pyflakes
+    "W",   # pycodestyle
+    "E",   # pycodestyle
+    "I",   # isort
+    "UP",  # pyupgrade
+    "PL",  # Pylint
+    "T201", # Print Statement
+]
+ignore = ["E501"]  # Ruff format takes care of line-too-long
+[tool.kedro_telemetry]
+project_id = "a14639b9585e46469a76e82b694d91fc"
