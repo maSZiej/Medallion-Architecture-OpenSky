@@ -24,8 +24,9 @@ Batching
 ### Data Flow
 Here is visualalization of data flow:
 
-
-![alt text](Images\Data_Flow.jpg)
+<p align="center">
+<img src="Images/Data_Flow.jng" width="400" alt="Centered Screenshot">
+</p>
 
 ### Technologies
 | Technology | used For|
