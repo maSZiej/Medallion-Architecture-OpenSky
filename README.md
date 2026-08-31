@@ -35,6 +35,10 @@ Here is visualalization of data flow:
 </p>
 
 <!-- ![Project Screenshot](images/screenshot.png) -->
+### Conteners
+<p align="center">
+<img src="Images/dockery.png" width="700" alt="Centered Screenshot">
+</p>
 
 
 ### Technologies
