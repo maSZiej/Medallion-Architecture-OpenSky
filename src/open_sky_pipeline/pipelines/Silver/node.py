@@ -1,4 +1,3 @@
-from open_sky_pipeline.Connect import get_spark
 from pyspark.sql.functions import col,create_map, lit,pandas_udf,from_unixtime,when,max
 from pyspark.sql.types import FloatType, DateType, StringType,IntegerType, BooleanType
 from pyspark.sql import DataFrame,SparkSession
@@ -9,6 +8,7 @@ from kedro.io import DataCatalog
 from pathlib import Path
 from kedro.framework.session import KedroSession
 from kedro.framework.startup import bootstrap_project
+from delta.tables import DeltaTable
 
 # Inicjalizacja kontekstu projektu Kedro
 
@@ -159,10 +159,13 @@ def silver_node(Bronze_Layer,Silver_hist):
     # df.show()
 def silver_node_hist(*args, **kwargs):
     spark = SparkSession.builder.getOrCreate()
-    df3_hist = spark.read.format("delta").load("s3a://meddalion/silver/aircraft")
-    df3_hist.write \
-        .format("delta") \
-        .mode("append") \
-        .save("s3a://meddalion/silver/aircraft_hist")
-    print('Hi')
+    if not DeltaTable.isDeltaTable(spark, "s3a://meddalion/silver/aircraft"):
+        
+        return True 
+    else:
+        df3_hist = spark.read.format("delta").load("s3a://meddalion/silver/aircraft")
+        df3_hist.write \
+            .format("delta") \
+            .mode("append") \
+            .save("s3a://meddalion/silver/aircraft_hist")
     return df3_hist

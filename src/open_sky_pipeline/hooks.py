@@ -31,7 +31,7 @@ class SparkHooks:
             .appName(context.project_path.name)
             .master("local[*]")
             # ---- S3A / MinIO Connection ----
-            .config("spark.hadoop.fs.s3a.endpoint", os.getenv("S3_ENDPOINT", "http://localhost:9000"))
+            .config("spark.hadoop.fs.s3a.endpoint", os.getenv("S3_ENDPOINT", "http://minio:9000"))
             .config("spark.hadoop.fs.s3a.access.key", os.getenv("AWS_ACCESS_KEY_ID", "minioadmin"))
             .config("spark.hadoop.fs.s3a.secret.key", os.getenv("AWS_SECRET_ACCESS_KEY", "minioadmin"))
             .config("spark.hadoop.fs.s3a.path.style.access", "true")
@@ -50,7 +50,7 @@ class SparkHooks:
             .config("spark.sql.execution.arrow.pyspark.enabled", "true")
             .config("spark.hadoop.fs.s3a.fast.upload", "true")\
             ### ---- Driver ----
-            .config("spark.driver.extraJavaOptions", "-Djava.io.tmpdir=C:/tmp/spark") \
+            .config("spark.driver.extraJavaOptions", "-Djava.io.tmpdir=/tmp/spark") \
         )
 
         spark = configure_spark_with_delta_pip(
@@ -58,8 +58,7 @@ class SparkHooks:
             extra_packages=PACKAGES
         ).getOrCreate()
 
-        # Opcjonalne: Ustawienia JVM nie są już konieczne, bo `spark.hadoop.*` automatycznie trafiają do Hadoop Configuration.
-        # Jeśli jednak doświadczasz problemów przy runtime, ten blok poniżej działa jako bezpiecznik:
+
         h_conf = spark.sparkContext._jsc.hadoopConfiguration()
         h_conf.set("fs.s3a.threads.keepalivetime", "60000")
         h_conf.set("fs.s3a.multipart.purge.age", "86400000")

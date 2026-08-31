@@ -33,5 +33,5 @@ COPY --chown=${KEDRO_UID}:${KEDRO_GID} . .
 RUN uv sync --locked --no-dev
 EXPOSE 8888
 
-CMD ["uv", "run", "kedro", "run"]
+# CMD ["uv", "run", "kedro", "run"]
 # CMD ["kedro", "run"]

@@ -1,4 +1,3 @@
-from open_sky_pipeline.Connect import get_spark
 from opensky_api import OpenSkyApi, TokenManager
 from pyspark.sql.types import StructType, StructField, StringType, MapType
 from pyspark.sql.functions import current_timestamp

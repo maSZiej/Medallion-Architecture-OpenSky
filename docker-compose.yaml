@@ -1,10 +1,74 @@
 services:
   airflow:
-    image: apache/airflow:2.3.1
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
     command: standalone
     ports:
       - "8080:8080"
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
+      - airflow-logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - pipeline-net
+
+  minio:
+    build:
+      context: .
+      dockerfile: Dockerfile.minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      - pipeline-net
+  minio-init:
+    image: minio/mc
+    networks:
+      - pipeline-net
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      until mc alias set local http://minio:9000 minioadmin minioadmin; do
+        echo 'Czekam na MinIO...';
+        sleep 3;
+      done;
+      mc mb --ignore-existing local/meddalion;
+      "
+  kedro:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["sleep", "infinity"]
+    environment:
+      S3_ENDPOINT: http://minio:9000
+    depends_on:
+      - minio
+    networks:
+      - pipeline-net
+
+  postgres:
+    image: postgres:17
+    ports:
+    - "5433:5432"
+    environment:
+      POSTGRES_DB: OpenSky_docker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - pipeline-net
+  
+networks:
+  pipeline-net:
+    name: pipeline-net
+volumes:
+  airflow-logs:
+  minio-data:
+  postgres-data:
