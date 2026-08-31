@@ -20,6 +20,7 @@ dependencies = [
     "pyarrow>=25.0.1",
     "pyspark==3.5.3",
     "pytest>=9.1.1",
+    "pytest-cov>=6.3.0",
     "requests>=2.34.2",
     "ruff>=0.16.3",
     "shapely>=2.1.2",
@@ -45,7 +46,7 @@ dev = [
 ]
 
 [tool.setuptools.dynamic]
-version = {attr = "new_kedro_project.__version__"}
+version = {attr = "open_sky_pipeline.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -73,7 +74,7 @@ source_dir = "src"
 [tool.pytest.ini_options]
 addopts = """
 --cov-report term-missing \
---cov src/new_kedro_project -ra"""
+--cov src/open_sky_pipeline -ra"""
 
 [tool.coverage.report]
 fail_under = 0

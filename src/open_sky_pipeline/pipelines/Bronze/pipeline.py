@@ -5,7 +5,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     return Pipeline([
         node(
             func=read_data_from_api,
-            inputs=None,       # pobiera z catalog.yml
-            outputs="bronze_layer",   # KEDRO AUTOMATYCZNIE ZAPISUJE DO S3/MinIO
+            inputs=None,       
+            outputs="bronze_layer",   
             name="data_extraction"
         )])
