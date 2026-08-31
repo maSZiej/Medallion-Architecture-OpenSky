@@ -13,7 +13,7 @@ PACKAGES = [
 # minio_access_key = 'minioadmin'
 # minio_secret_key = 'minioadmin'
 # minio_endpoint = 'http://127.0.0.1:9000'
-project_root = Path(__file__).resolve().parents[2]
+project_root = Path(__file__).resolve().parents[1]
 # print(project_root)
 HADOOP_HOME = f"{project_root}/jars/hadoop"
 
@@ -23,7 +23,7 @@ os.environ["PATH"] = (
     + os.pathsep
     + os.environ["PATH"]
 )
-os.environ["JAVA_HOME"]=f"{project_root}/jars/jdk-17.0.2"
+os.environ["JAVA_HOME"] = r"C:\Program Files\Java\jdk-17.0.2"
 os.environ["PYSPARK_PYTHON"] = sys.executable
 os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
 
