@@ -25,8 +25,11 @@ Batching
 Here is visualalization of data flow:
 
 <p align="center">
-<img src="Images/Data_Flow.jng" width="400" alt="Centered Screenshot">
+<img src="Images/Data_Flow.jpg" width="400" alt="Centered Screenshot">
 </p>
+
+![Project Screenshot](images/screenshot.png)
+
 
 ### Technologies
 | Technology | used For|
