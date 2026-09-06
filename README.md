@@ -31,7 +31,7 @@ Batching
 Here is visualalization of data flow:
 
 <p align="center">
-<img src="Images/Data_Flow.jpg" width="700" alt="Centered Screenshot">
+<img src="Images/DataFlow.png" width="700" alt="Centered Screenshot">
 </p>
 
 <!-- ![Project Screenshot](images/screenshot.png) -->
@@ -47,8 +47,34 @@ Here is visualalization of data flow:
 | UV | libraries depedency| 
 | Pyspark | disitribiuted processing|
 | Minio | data lake - S3 bucket on prem | 
+| Postgres | For better access to gold layer |
 | Delta-spark | transaction and data time travel| 
 | Kedro | bulding effective pipeline| 
 | Docker| contenerization services | 
 | Github | version control| 
 
+## How to run 
+Pull from git 
+
+Create conf\local\credentials.yml file in format:
+
+    minio:
+        minio_access_key: *****
+        minio_secret_key: *****
+        client_kwargs:
+            endpoint_url: http://minio:9000
+
+    postgres:
+        user: *****
+        password: *****
+        driver: org.postgresql.Driver
+        url: jdbc:postgresql://postgres:5432/OpenSky_docker
+
+    opensky_api:
+        clientId: *****
+        clientSecret: *****
+
+then 
+    docker-compose up
+
+you can install pgadmin and check data on localhost on port 5432
