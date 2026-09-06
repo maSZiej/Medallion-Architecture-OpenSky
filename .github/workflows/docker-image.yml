@@ -17,6 +17,7 @@ jobs:
     
     - name: Build the Docker image
       run: docker build -t kedro-app:test .
-
+    - name: Run ls inside Docker container
+      run: docker run --rm kedro-app:test ls
     - name: Run Kedro tests inside Docker container
       run: docker run --rm kedro-app:test uv run pytest
