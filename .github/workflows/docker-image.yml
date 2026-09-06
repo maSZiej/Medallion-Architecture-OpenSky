@@ -18,6 +18,6 @@ jobs:
     - name: Build the Docker image
       run: docker build -t kedro-app:test .
     - name: Run find inside Docker container
-      run: docker run --rm kedro-app:test find . -maxdepth 4 -type f
+      run: docker run --rm kedro-app:test find . -maxdepth 5 -type f
     - name: Run Kedro tests inside Docker container
       run: docker run --rm kedro-app:test uv run pytest
