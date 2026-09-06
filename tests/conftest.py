@@ -18,7 +18,8 @@ def get_spark():
     HADOOP_HOME = f"{project_root}/jars/hadoop"
     os.environ["HADOOP_HOME"] = HADOOP_HOME
     os.environ["PATH"] = os.path.join(HADOOP_HOME, "bin") + os.pathsep + os.environ.get("PATH", "")
-    os.environ["JAVA_HOME"] = r"C:\Program Files\Java\jdk-17.0.2"
+    
+    # os.environ["JAVA_HOME"] = r"C:\Program Files\Java\jdk-17.0.2"
     os.environ["PYSPARK_PYTHON"] = sys.executable
     os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
 
