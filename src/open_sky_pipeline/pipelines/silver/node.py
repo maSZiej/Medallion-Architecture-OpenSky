@@ -1,5 +1,4 @@
 from pyspark.sql.functions import col,create_map, lit,pandas_udf,from_unixtime,when,max
-from pyspark.sql.types import FloatType,IntegerType, BooleanType
 from pyspark.sql import DataFrame,SparkSession
 from pyspark.sql.column import Column
 from shapely.geometry import Point, Polygon
@@ -10,14 +9,17 @@ from kedro.framework.startup import bootstrap_project
 from delta.tables import DeltaTable
 
 
-@pandas_udf("boolean")
-def check_point_in_polygon(long: pd.Series, lat: pd.Series,poland_polygon: Polygon) -> pd.Series:
-    return pd.Series(
-        [
-            poland_polygon.contains(Point(lon, la))
-            for lon, la in zip(long, lat)
-        ]
-    )
+def make_check_point_in_polygon(poland_polygon: Polygon):
+    @pandas_udf("boolean")
+    def check_point_in_polygon(long: pd.Series,lat: pd.Series) -> pd.Series:
+        return pd.Series(
+            [
+                poland_polygon.contains(Point(lon, la))
+                for lon, la in zip(long, lat)
+            ]
+        )
+    return check_point_in_polygon
+
 def check_rows_count(df:DataFrame)-> int:
     cols=df.columns
     cols.remove("ingestion_timestamp")
@@ -27,19 +29,13 @@ def check_rows_count(df:DataFrame)-> int:
 def enrich_dataframe(
     df:DataFrame,
     poland_polygon:Polygon,
-    float_list:list,
-    int_list:list,
-    bool_list:list,
     aircraft_map:Column,
     position_source_map:Column
     )->DataFrame:
-    
-    df=df \
-    .withColumns({col: df[col].cast(FloatType()) for col in float_list}) \
-    .withColumns({col: df[col].cast(IntegerType()) for col in int_list}) \
-    .withColumns({col: df[col].cast(BooleanType()) for col in bool_list})
+    check_point = make_check_point_in_polygon(poland_polygon)
+
     df=(df   
-    #Enrichment
+
     .withColumn(
         "altitude_diff", 
         col("geo_altitude") - col("baro_altitude")
@@ -68,8 +64,8 @@ def enrich_dataframe(
         )
     .withColumn(
         "isPoland",
-        check_point_in_polygon(col("longitude"), col("latitude"),poland_polygon)
-        ))
+        check_point(col("longitude"), col("latitude"))
+    ))
     df=df.na.drop(subset=["icao24", "callsign"])
     return df
     
@@ -81,9 +77,6 @@ def silver_node(Bronze_Layer,Silver_hist):
         context = session.load_context()
         catalog = context.catalog
         Poland_Polygon = catalog.load("Poland_polygon")
-    int_list=["time_position","last_contact","position_source","category"]
-    float_list=["longitude","latitude","geo_altitude","velocity","true_track","vertical_rate","baro_altitude"]
-    bool_list=["on_ground","spi"]
     aircraft_dict = {
         0: "No Info",
         1: "Light",
@@ -128,9 +121,6 @@ def silver_node(Bronze_Layer,Silver_hist):
     count_before_enrichment=check_rows_count(df)
     df=enrich_dataframe(df=df,
                         poland_polygon=poland_polygon,
-                        float_list=float_list,
-                        int_list=int_list,
-                        bool_list=bool_list,
                         aircraft_map=aircraft_map,
                         position_source_map=position_source_map
                         )

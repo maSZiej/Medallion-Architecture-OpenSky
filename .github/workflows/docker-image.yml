@@ -1,10 +1,10 @@
 name: Docker Image CI
 
 on:
-  [push]
-    # branches: [ "*" ]
-  # pull_request:
-  #   branches: [ "master" ]
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "master" ]
 
 jobs:
 
@@ -14,10 +14,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+    - name: Run Ruff linter
+      uses: astral-sh/ruff-action@v3
+      with:
+          args: check .
+
+    - name: Check formatting
+      uses: astral-sh/ruff-action@v3
+      with:
+          args: format --check .
+
     - name: Build the Docker image
       run: docker build -t kedro-app:test .
-    - name: Run find inside Docker container
-      run: docker run --rm kedro-app:test find . -maxdepth 5 -type f
+    # - name: Run find inside Docker container
+    #   run: docker run --rm kedro-app:test find . -maxdepth 5 -type f
     - name: Run Kedro tests inside Docker container
       run: docker run --rm kedro-app:test uv run pytest
