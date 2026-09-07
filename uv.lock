@@ -1238,6 +1238,7 @@ dependencies = [
     { name = "requests" },
     { name = "ruff" },
     { name = "shapely" },
+    { name = "sphinx" },
 ]
 
 [package.optional-dependencies]
@@ -1286,6 +1287,7 @@ requires-dist = [
     { name = "ruff", specifier = ">=0.16.3" },
     { name = "ruff", marker = "extra == 'dev'", specifier = "~=0.16.3" },
     { name = "shapely", specifier = ">=2.1.2" },
+    { name = "sphinx", specifier = ">=7.2.6" },
     { name = "sphinx", marker = "extra == 'docs'", specifier = ">=5.3,<7.3" },
     { name = "sphinx-autodoc-typehints", marker = "extra == 'docs'", specifier = "==1.20.2" },
     { name = "sphinx-copybutton", marker = "extra == 'docs'", specifier = "==0.5.2" },
