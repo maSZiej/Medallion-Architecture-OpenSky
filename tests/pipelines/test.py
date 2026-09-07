@@ -1,6 +1,3 @@
-import pytest
-import boto3
-
 # @pytest.fixture(scope="session", autouse=True)
 # def setup_minio_bucket():
 #     s3 = boto3.client(

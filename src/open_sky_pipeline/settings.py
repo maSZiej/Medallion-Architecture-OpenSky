@@ -4,6 +4,7 @@ https://docs.kedro.org/en/stable/kedro_project_setup/settings.html."""
 
 # Instantiated project hooks.
 from open_sky_pipeline.hooks import SparkHooks
+
 # Hooks are executed in a Last-In-First-Out (LIFO) order.
 HOOKS = (SparkHooks(),)
 
