@@ -123,7 +123,11 @@ def silver_node(Bronze_Layer, Silver_hist):
         position_source_map=position_source_map,
     )
     count_after_enrichment = check_rows_count(df)
-    print(count_before_enrichment == count_after_enrichment)
+    diff = count_before_enrichment == count_after_enrichment
+    if not diff:
+        raise ValueError(
+            f"Row count mismatch after enrichment: before={count_before_enrichment}, after={count_after_enrichment}"
+        )
     return df
 
 

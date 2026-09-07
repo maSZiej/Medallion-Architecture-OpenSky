@@ -17,7 +17,7 @@ def get_spark():
     ]
 
     project_root = Path(__file__).resolve().parents[1]
-    print(project_root)
+    # print(project_root)
     HADOOP_HOME = f"{project_root}/jars/hadoop"
     os.environ["HADOOP_HOME"] = HADOOP_HOME
     os.environ["PATH"] = (

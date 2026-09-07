@@ -41,6 +41,8 @@ def test_get_timestamp(get_spark):
 
 
 def test_map_data(sample_states):
+    len_states = 3
+    len_cols = 18
     list_states = map_data(states=sample_states)
-    assert len(list_states[0]) == 18
-    assert len(list_states) == 3
+    assert len(list_states[0]) == len_cols
+    assert len(list_states) == len_states

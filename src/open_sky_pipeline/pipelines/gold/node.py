@@ -42,12 +42,12 @@ def gold_layer(*args, **kwargs):
         df = (
             spark.read.format("delta")
             .load("s3a://meddalion/silver/aircraft")
-            .where((col("isPoland") == True) & (col("position_source_name") == "ADS-B"))
+            .where((col("isPoland")) & (col("position_source_name") == "ADS-B"))
         )
         df_hist = (
             spark.read.format("delta")
             .load("s3a://meddalion/silver/aircraft_hist")
-            .where((col("isPoland") == True) & (col("position_source_name") == "ADS-B"))
+            .where((col("isPoland")) & (col("position_source_name") == "ADS-B"))
         )
 
         df_fact = df.select(
@@ -76,14 +76,14 @@ def gold_layer(*args, **kwargs):
             .select("ingestion_timestamp", col("count").alias("all_observation_count"))
         )
         df_ground = (
-            df_hist.where(col("on_ground") == True)
+            df_hist.where(col("on_ground"))
             .groupBy(col("ingestion_timestamp"))
             .count()
             .orderBy([col("ingestion_timestamp")], ascending=False)
             .select("ingestion_timestamp", col("count").alias("on_ground_count"))
         )
         df_velocity = (
-            df_hist.where(col("on_ground") == False)
+            df_hist.where(not col("on_ground"))
             .groupBy(col("ingestion_timestamp"))
             .agg(
                 avg("velocity").alias("avg_velocity"),
@@ -111,7 +111,7 @@ def gold_layer(*args, **kwargs):
         )
         ##################
         df_cat = (
-            df_hist.where(col("on_ground") == False)
+            df_hist.where(not col("on_ground"))
             .groupBy(col("ingestion_timestamp"), col("vertical_category"))
             .agg(
                 avg("baro_altitude").alias("avg_baro_alt"),
