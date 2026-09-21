@@ -56,7 +56,10 @@ Here is visualalization of data flow:
 ## How to run 
 Pull from git 
 
+docker login dhi.io
+
 Create conf\local\credentials.yml file in format:
+
 
     minio:
         minio_access_key: *****
