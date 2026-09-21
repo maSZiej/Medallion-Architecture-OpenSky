@@ -1,4 +1,4 @@
-FROM minio/minio:latest
+FROM dhi.io/minio:latest
 
 
 RUN chmod -R 777 /usr/bin

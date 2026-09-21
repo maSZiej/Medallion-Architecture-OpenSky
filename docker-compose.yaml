@@ -26,8 +26,9 @@ services:
       - minio-data:/data
     networks:
       - pipeline-net
+  
   minio-init:
-    image: minio/mc
+    image: quay.io/minio/mc
     networks:
       - pipeline-net
     depends_on:

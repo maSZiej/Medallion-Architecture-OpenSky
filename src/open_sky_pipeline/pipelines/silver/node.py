@@ -64,15 +64,7 @@ def enrich_dataframe(
     df = df.na.drop(subset=["icao24", "callsign"])
     return df
 
-
-def silver_node(Bronze_Layer, Silver_hist):
-    # spark = SparkSession.builder.getOrCreate()
-    PROJECT_DIR = Path(__file__).resolve().parents[4]
-    bootstrap_project(PROJECT_DIR)
-    with KedroSession.create(PROJECT_DIR) as session:
-        context = session.load_context()
-        catalog = context.catalog
-        Poland_Polygon = catalog.load("Poland_polygon")
+def Init_maps()-> tuple[Column, Column]:
     aircraft_dict = {
         0: "No Info",
         1: "Light",
@@ -107,12 +99,23 @@ def silver_node(Bronze_Layer, Silver_hist):
             for item in (lit(kv[0]), lit(kv[1]))
         ]
     )
+    return aircraft_map, position_source_map
+
+def silver_node(Bronze_Layer, Silver_hist):
+    # spark = SparkSession.builder.getOrCreate()
+    PROJECT_DIR = Path(__file__).resolve().parents[4]
+    bootstrap_project(PROJECT_DIR)
+    with KedroSession.create(PROJECT_DIR) as session:
+        context = session.load_context()
+        catalog = context.catalog
+        Poland_Polygon = catalog.load("Poland_polygon")
     poland_polygon = Polygon(
         Poland_Polygon["features"][0]["geometry"]["coordinates"][0]
     )
     ################################################################
     # ACTIONS
     df = Bronze_Layer
+    aircraft_map, position_source_map = Init_maps(poland_polygon)
     max_ingestion = df.select(max("ingestion_timestamp")).first()[0]
     df = df.where(col("ingestion_timestamp") == max_ingestion)
     count_before_enrichment = check_rows_count(df)
