@@ -29,4 +29,4 @@ jobs:
     # - name: Run find inside Docker container
     #   run: docker run --rm kedro-app:test find . -maxdepth 5 -type f
     - name: Run Kedro tests inside Docker container
-      run: docker run --rm -e KEDRO_ENV=ci kedro-app:test uv run pytest --env=ci
+      run: docker run --rm -e KEDRO_ENV=ci kedro-app:test uv run pytest 
