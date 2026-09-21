@@ -64,7 +64,8 @@ def enrich_dataframe(
     df = df.na.drop(subset=["icao24", "callsign"])
     return df
 
-def Init_maps()-> tuple[Column, Column]:
+
+def Init_maps() -> tuple[Column, Column]:
     aircraft_dict = {
         0: "No Info",
         1: "Light",
@@ -100,6 +101,7 @@ def Init_maps()-> tuple[Column, Column]:
         ]
     )
     return aircraft_map, position_source_map
+
 
 def silver_node(Bronze_Layer, Silver_hist):
     # spark = SparkSession.builder.getOrCreate()
