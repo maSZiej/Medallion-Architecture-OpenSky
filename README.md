@@ -4,7 +4,7 @@ The purpose of this project is to visualize aircraft traffic and calculate metri
 Project is based on pyspark for distributed processing, s3 minio for storage, delta for acid and time travel,
 kedro for organizing maintainable pipelines, airflow for orchestration and docker and docker compose for containers and in the end github actions for CI
 
-### Technologies
+# Technologies
 | Technology | Used for|
 |----------|----------|
 | UV | Dependency management| 
@@ -16,17 +16,19 @@ kedro for organizing maintainable pipelines, airflow for orchestration and docke
 | Docker| contenerization services | 
 | Github | version control| 
 
-### Bronze layer:
+# Architecture 
+
+## Bronze layer:
 
 Raw data are extracted from **[OpenSkyAPI](https://opensky-network.org/data/api)** 
 
 Data is ingested in batch for every 15 minutes.
 
-### Silver layer:
+## Silver layer:
 
 In silver layer data are processed for example handling with nulls in icao and callsing columns, get data from unix timestamps, convert columns to valid format and split data into category.
 
-### Gold layer:
+## Gold layer:
 
 Data in gold layer are stored in S3 minio and mirrored to Postgres docker which can be accessed via Pg_Admin.
 The gold layer follows a star schema consisting of a fact table and dimension tables.
@@ -38,7 +40,7 @@ KPI 2 – Flight statistics by vertical movement category
 
 
 
-### Data Flow
+## Data Flow
 Here is visualization of data flow:
 
 <p align="center">
@@ -57,14 +59,13 @@ Here is visualization of data flow:
 | MinIO API | http://localhost:9000 |
 | MinIO Console | http://localhost:9001 |
 | Airflow | http://localhost:8080 |
-| PgAdmin | http://localhost:5050 |
 
 
 ## How to Run
-1. Clone the repository
+### 1. Clone the repository
     git clone <repository-url>
     cd <repository-name>
-2. Configure credentials
+### 2. Configure credentials
 
 Create the following file:
 
@@ -93,7 +94,7 @@ Important: Do not commit conf/local/credentials.yml to Git, as it contains sensi
 Log docker in dhi.io to have access to minio image using following command.
 docker login dhi.io 
 
-3. Start the application
+### 3. Start the application
 
 Start all services using Docker Compose:
 
@@ -105,7 +106,7 @@ To run the services in the background:
 
 The Docker Compose environment starts the services required by the data pipeline, including Spark, Airflow, MinIO and PostgreSQL.
 
-4. Access the services
+### 4. Access the services
 
 The main services can be accessed using the ports configured in docker-compose.yml.
 
@@ -119,7 +120,7 @@ For example:
 
 The exact ports depend on the mappings defined in docker-compose.yml.
 
-5. Access PostgreSQL with PgAdmin
+### 5. Access PostgreSQL with PgAdmin
 
 PostgreSQL is exposed on port 5432. It can be accessed using PgAdmin or another PostgreSQL client.
 
@@ -135,7 +136,7 @@ When connecting from another Docker container, use the PostgreSQL service name i
 
     Host: postgres
     Port: 5432
-6. Stop the application
+### 6. Stop the application
 
 To stop the containers:
 
