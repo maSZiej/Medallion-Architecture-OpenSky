@@ -1,8 +1,7 @@
 # Project goals
 
-The purpose of this project is to visualize aircraft traffic and calculate metrics such as average velocity and altitude over Polish airspace. To achieve that goal the medallion architecture with 3 layers bronze, silver and gold was used.
-Project is based on pyspark for distributed processing, s3 minio for storage, delta for acid and time travel,
-kedro for organizing maintainable pipelines, airflow for orchestration and docker and docker compose for containers and in the end github actions for CI
+The purpose of this project is to visualize aircraft traffic and calculate metrics such as average velocity and altitude over Polish airspace. 
+
 
 # Technologies
 | Technology | Used for|
@@ -31,34 +30,33 @@ In silver layer data are processed for example handling with nulls in icao and c
 ## Gold layer:
 
 Data in gold layer are stored in S3 minio and mirrored to Postgres docker which can be accessed via Pg_Admin.
+
 The gold layer follows a star schema consisting of a fact table and dimension tables.
+
 Data are organized in Star structure with Fact_table, dimensional table and 2 separate kpi.
+
 Fact table store information about actual flight such as flight_number,velocity,baro_altitude etc ...
+
 Dim table store information about aircraft like number and origin country
+
 KPI 1 – Overall flight statistics
+
 KPI 2 – Flight statistics by vertical movement category
 
 
 
 ## Data Flow
-Here is visualization of data flow:
 
 <p align="center">
 <img src="Images/DataFlow.png" width="700" alt="Centered Screenshot">
 </p>
 
-<!-- ![Project Screenshot](images/screenshot.png) -->
-### Containers
+
+## Containers
 <p align="center">
 <img src="Images/dockery.png" width="700" alt="Centered Screenshot">
 </p>
 
-| Service | URL / Port |
-|---|---|
-| PostgreSQL | http://localhost:5432 |
-| MinIO API | http://localhost:9000 |
-| MinIO Console | http://localhost:9001 |
-| Airflow | http://localhost:8080 |
 
 
 ## How to Run
@@ -92,7 +90,7 @@ with the following structure:
 Important: Do not commit conf/local/credentials.yml to Git, as it contains sensitive credentials.
 
 Log docker in dhi.io to have access to minio image using following command.
-docker login dhi.io 
+    docker login dhi.io 
 
 ### 3. Start the application
 
@@ -112,11 +110,12 @@ The main services can be accessed using the ports configured in docker-compose.y
 
 For example:
 
-    Service	Address
-    PostgreSQL	localhost:5433
-    MinIO API	localhost:9000
-    MinIO Console	http://localhost:9001
-    Airflow	http://localhost:8080
+| Service | URL / Port |
+|---|---|
+| PostgreSQL | http://localhost:5432 |
+| MinIO API | http://localhost:9000 |
+| MinIO Console | http://localhost:9001 |
+| Airflow | http://localhost:8080 |
 
 The exact ports depend on the mappings defined in docker-compose.yml.
 
@@ -141,3 +140,28 @@ When connecting from another Docker container, use the PostgreSQL service name i
 To stop the containers:
 
     docker compose down
+
+
+
+# Example outputs
+
+## Fact Table
+<p align="center">
+<img src="Images/Fact_Table_Example.png" width="900"  alt="Centered Screenshot">
+</p>
+
+
+## KPI 1 – Overall flight statistics
+<p align="center">
+<img src="Images/KPI_Ts_Example.png" width="700" alt="Centered Screenshot">
+</p>
+
+## KPI 2 – Flight statistics by vertical movement category
+<p align="center">
+<img src="Images/KPI_Cat_Example.png" width="700" alt="Centered Screenshot">
+</p>
+
+## Dim Table
+<p align="center">
+<img src="Images/Dim_Table_Example.png" width="700" alt="Centered Screenshot">
+</p>
