@@ -1,19 +1,21 @@
-# Project goals
 
+This project implements a batch data pipeline for processing aircraft data collected from the OpenSky Network API. The pipeline follows a Medallion Architecture with Bronze, Silver, and Gold layers and uses PySpark for distributed processing. Processed data is stored in MinIO using Delta Lake and the Gold layer is additionally exposed through PostgreSQL for analytical access.
+
+# Project goals
 The purpose of this project is to visualize aircraft traffic and calculate metrics such as average velocity and altitude over Polish airspace. 
 
 
 # Technologies
-| Technology | Used for|
-|----------|----------|
-| UV | Dependency management| 
-| Pyspark | disitribiuted processing|
-| Minio | On-premises S3-compatible data lake | 
-| Postgres | For better access to gold layer |
-| Delta-spark | ACID transactions and time travel| 
-| Kedro | bulding effective pipeline| 
-| Docker| contenerization services | 
-| Github | version control| 
+| Technology | Used for |
+|------------|----------|
+| UV | Dependency management |
+| PySpark | Distributed data processing |
+| MinIO | On-premises S3-compatible data lake |
+| PostgreSQL | Serving the Gold layer |
+| Delta Lake | ACID transactions and time travel |
+| Kedro | Pipeline development and organization |
+| Docker | Containerization |
+| GitHub | Version control and CI |
 
 # Architecture 
 
@@ -21,19 +23,18 @@ The purpose of this project is to visualize aircraft traffic and calculate metri
 
 Raw data are extracted from **[OpenSkyAPI](https://opensky-network.org/data/api)** 
 
-Data is ingested in batch for every 15 minutes.
+Data is ingested in 15-minute intervals using a batch processing approach.
 
 ## Silver layer:
 
-In silver layer data are processed for example handling with nulls in icao and callsing columns, get data from unix timestamps, convert columns to valid format and split data into category.
+In the Silver layer, raw data is cleaned and transformed. This includes handling null values in the icao24 and callsign columns, converting Unix timestamps into readable datetime values, applying appropriate data types, and categorizing flights based on their vertical rate.
 
 ## Gold layer:
 
 Data in gold layer are stored in S3 minio and mirrored to Postgres docker which can be accessed via Pg_Admin.
 
-The gold layer follows a star schema consisting of a fact table and dimension tables.
+The gold layer follows a star schema consisting of a fact table, dimension table and dwo separate KPI's.
 
-Data are organized in Star structure with Fact_table, dimensional table and 2 separate kpi.
 
 Fact table store information about actual flight such as flight_number,velocity,baro_altitude etc ...
 
@@ -44,6 +45,79 @@ KPI 1 – Overall flight statistics
 KPI 2 – Flight statistics by vertical movement category
 
 
+## CI/tests
+
+
+###  CI
+
+```text
+CI Pipeline
+│
+├── 1. Checkout
+│      └── Download repository code
+│
+├── 2. Ruff
+│      ├── Lint
+│      └── Format
+│
+├── 3. Docker
+│      ├── Build
+│      └── Tests
+│
+└── 4. Result
+       ├──  Success
+       └──  Failure
+
+```
+
+### Tests 
+
+For local test change Java_Home in tests/conftest.py file for your path of jdk-17.0.2
+and run command 
+    uv run pytest
+
+```text
+Project root
+│
+├── conf
+│      ├── base
+│      │    └── catalog.yml
+│      ├── local 
+│      │    └── credentials.yml
+│      ├── ci
+│      │    └── credentials.yml
+│      └── logging.yml
+├──  src
+│      └── open_sky_pipeline
+│           └── pipelines
+│           │    ├── bronze
+│           │    │    ├── __init__.py
+│           │    │    ├── node.py
+│           │    │    └── pipeline.py
+│           │    ├── silver
+│           │    │    ├── __init__.py
+│           │    │    ├── node.py
+│           │    │    └── pipeline.py
+│           │    ├── gold
+│           │         ├── __init__.py
+│           │         ├── node.py
+│           │         └── pipeline.py
+│           ├── __init__.py
+│           ├── hooks.py
+│           ├── pipeline_registry.py
+│           └── settings.py
+│
+└──  tests
+      ├── pipelines
+      │     ├── bronze
+      │     │    └── pipeline.py
+      │     ├── silver
+      │     │    └── pipeline.py
+      │     ├── gold
+      │     │    └── pipeline.py
+      │
+      └── conftest.py
+```
 
 ## Data Flow
 
@@ -89,7 +163,7 @@ with the following structure:
 
 Important: Do not commit conf/local/credentials.yml to Git, as it contains sensitive credentials.
 
-Log docker in dhi.io to have access to minio image using following command.
+Log in to the dhi.io Docker registry to access the required MinIO image:
     docker login dhi.io 
 
 ### 3. Start the application
@@ -163,5 +237,5 @@ To stop the containers:
 
 ## Dim Table
 <p align="center">
-<img src="Images/Dim_Table_Example.png" width="700" alt="Centered Screenshot">
+<img src="Images/Dim_Table_Example.png" width="500" alt="Centered Screenshot">
 </p>
