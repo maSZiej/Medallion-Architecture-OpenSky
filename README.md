@@ -46,15 +46,15 @@ Here is visualization of data flow:
 </p>
 
 <!-- ![Project Screenshot](images/screenshot.png) -->
-### Conteners
+### Containers
 <p align="center">
 <img src="Images/dockery.png" width="700" alt="Centered Screenshot">
 </p>
 
 | Service | URL / Port |
 |---|---|
-| PostgreSQL | localhost:5432 |
-| MinIO API | localhost:9000 |
+| PostgreSQL | http://localhost:5432 |
+| MinIO API | http://localhost:9000 |
 | MinIO Console | http://localhost:9001 |
 | Airflow | http://localhost:8080 |
 | PgAdmin | http://localhost:5050 |
@@ -62,31 +62,31 @@ Here is visualization of data flow:
 
 ## How to Run
 1. Clone the repository
-git clone <repository-url>
-cd <repository-name>
+    git clone <repository-url>
+    cd <repository-name>
 2. Configure credentials
 
 Create the following file:
 
-conf/local/credentials.yml
+    conf/local/credentials.yml
 
 with the following structure:
 
-minio:
-    minio_access_key: <your-minio-access-key>
-    minio_secret_key: <your-minio-secret-key>
-    client_kwargs:
-        endpoint_url: http://minio:9000
+    minio:
+        minio_access_key: <your-minio-access-key>
+        minio_secret_key: <your-minio-secret-key>
+        client_kwargs:
+            endpoint_url: http://minio:9000
 
-postgres:
-    user: <your-postgres-user>
-    password: <your-postgres-password>
-    driver: org.postgresql.Driver
-    url: jdbc:postgresql://postgres:5432/OpenSky_docker
+    postgres:
+        user: <your-postgres-user>
+        password: <your-postgres-password>
+        driver: org.postgresql.Driver
+        url: jdbc:postgresql://postgres:5432/OpenSky_docker
 
-opensky_api:
-    clientId: <your-opensky-client-id>
-    clientSecret: <your-opensky-client-secret>
+    opensky_api:
+        clientId: <your-opensky-client-id>
+        clientSecret: <your-opensky-client-secret>
 
 Important: Do not commit conf/local/credentials.yml to Git, as it contains sensitive credentials.
 
@@ -97,11 +97,11 @@ docker login dhi.io
 
 Start all services using Docker Compose:
 
-docker compose up
+    docker compose up
 
 To run the services in the background:
 
-docker compose up -d
+    docker compose up -d
 
 The Docker Compose environment starts the services required by the data pipeline, including Spark, Airflow, MinIO and PostgreSQL.
 
@@ -111,11 +111,11 @@ The main services can be accessed using the ports configured in docker-compose.y
 
 For example:
 
-Service	Address
-PostgreSQL	localhost:5433
-MinIO API	localhost:9000
-MinIO Console	http://localhost:9001
-Airflow	http://localhost:8080
+    Service	Address
+    PostgreSQL	localhost:5433
+    MinIO API	localhost:9000
+    MinIO Console	http://localhost:9001
+    Airflow	http://localhost:8080
 
 The exact ports depend on the mappings defined in docker-compose.yml.
 
@@ -125,18 +125,18 @@ PostgreSQL is exposed on port 5432. It can be accessed using PgAdmin or another 
 
 When connecting from the host machine, use:
 
-Host: localhost
-Port: 5433
-Database: OpenSky_docker
-Username: <your-postgres-user>
-Password: <your-postgres-password>
+    Host: localhost
+    Port: 5433
+    Database: OpenSky_docker
+    Username: <your-postgres-user>
+    Password: <your-postgres-password>
 
 When connecting from another Docker container, use the PostgreSQL service name instead:
 
-Host: postgres
-Port: 5432
+    Host: postgres
+    Port: 5432
 6. Stop the application
 
 To stop the containers:
 
-docker compose down
+    docker compose down
